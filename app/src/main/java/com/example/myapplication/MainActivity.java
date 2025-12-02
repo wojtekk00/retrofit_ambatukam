@@ -1,6 +1,9 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -19,12 +22,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     List<Pytanie> pytania;
+    private TextView textViewTresc;
+    private RadioButton radioButtonOdpa, radioButtonOdpb, radioButtonOdpc;
+    private Button buttonDalej;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        textViewTresc = findViewById(R.id.textViewTresc);
+        radioButtonOdpa = findViewById(R.id.radioButtonOdpa);
+        radioButtonOdpb = findViewById(R.id.radioButtonOdpb);
+        radioButtonOdpc = findViewById(R.id.radioButtonOdpc);
+        buttonDalej = findViewById(R.id.buttonDalej);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://my-json-server.typicode.com/wojtekk00/retrofit_pytania/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -40,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         }
                         pytania = response.body();
-                        Toast.makeText(MainActivity.this, pytania.get(0).getTrescPytania(), Toast.LENGTH_SHORT).show();
+
                     }
 
                     @Override
