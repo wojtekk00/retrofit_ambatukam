@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView textViewTresc;
     private RadioButton radioButtonOdpa, radioButtonOdpb, radioButtonOdpc;
     private Button buttonDalej;
+    private int p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         radioButtonOdpb = findViewById(R.id.radioButtonOdpb);
         radioButtonOdpc = findViewById(R.id.radioButtonOdpc);
         buttonDalej = findViewById(R.id.buttonDalej);
+        p = 0;
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://my-json-server.typicode.com/wojtekk00/retrofit_pytania/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -50,8 +53,22 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, ""+response.code(), Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        p = 0;
                         pytania = response.body();
-
+                        textViewTresc.setText(pytania.get(p).getTrescPytania());
+                        radioButtonOdpa.setText(pytania.get(p).getOdpa());
+                        radioButtonOdpb.setText(pytania.get(p).getOdpb());
+                        radioButtonOdpc.setText(pytania.get(p).getOdpc());
+                        buttonDalej.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                p += 1;
+                                textViewTresc.setText(pytania.get(p).getTrescPytania());
+                                radioButtonOdpa.setText(pytania.get(p).getOdpa());
+                                radioButtonOdpb.setText(pytania.get(p).getOdpb());
+                                radioButtonOdpc.setText(pytania.get(p).getOdpc());
+                            }
+                        });
                     }
 
                     @Override
