@@ -1,5 +1,4 @@
 package com.example.myapplication;
-//tfhjk
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView textViewTresc;
     private RadioButton radioButtonOdpa, radioButtonOdpb, radioButtonOdpc;
     private Button buttonDalej;
-    private int p;
+    private int licznik;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         radioButtonOdpb = findViewById(R.id.radioButtonOdpb);
         radioButtonOdpc = findViewById(R.id.radioButtonOdpc);
         buttonDalej = findViewById(R.id.buttonDalej);
-        p = 0;
+        licznik = 0;
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://my-json-server.typicode.com/wojtekk00/retrofit_pytania/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -53,22 +52,8 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, ""+response.code(), Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        p = 0;
                         pytania = response.body();
-                        textViewTresc.setText(pytania.get(p).getTrescPytania());
-                        radioButtonOdpa.setText(pytania.get(p).getOdpa());
-                        radioButtonOdpb.setText(pytania.get(p).getOdpb());
-                        radioButtonOdpc.setText(pytania.get(p).getOdpc());
-                        buttonDalej.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                p += 1;
-                                textViewTresc.setText(pytania.get(p).getTrescPytania());
-                                radioButtonOdpa.setText(pytania.get(p).getOdpa());
-                                radioButtonOdpb.setText(pytania.get(p).getOdpb());
-                                radioButtonOdpc.setText(pytania.get(p).getOdpc());
-                            }
-                        });
+                        wypelnijPytania(licznik);
                     }
 
                     @Override
@@ -76,6 +61,27 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
+
         );
+        buttonDalej.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(licznik<pytania.size()-1){
+                    licznik++;
+                    wypelnijPytania(licznik);
+                }
+                else{
+
+                }
+            }
+        });
+
+
+    }
+    private void wypelnijPytania(int p){
+        textViewTresc.setText(pytania.get(p).getTrescPytania());
+        radioButtonOdpa.setText(pytania.get(p).getOdpa());
+        radioButtonOdpb.setText(pytania.get(p).getOdpb());
+        radioButtonOdpc.setText(pytania.get(p).getOdpc());
     }
 }
