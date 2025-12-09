@@ -3,6 +3,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,10 +23,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     List<Pytanie> pytania;
-    private TextView textViewTresc;
+    private TextView textViewTresc, textViewWynik;
     private RadioButton radioButtonOdpa, radioButtonOdpb, radioButtonOdpc;
     private Button buttonDalej;
     private int licznik;
+    private int poprawna, zaznaczona, punkty;
+    private RadioGroup radioGroupOdpowiedzi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,11 @@ public class MainActivity extends AppCompatActivity {
         radioButtonOdpb = findViewById(R.id.radioButtonOdpb);
         radioButtonOdpc = findViewById(R.id.radioButtonOdpc);
         buttonDalej = findViewById(R.id.buttonDalej);
+        radioGroupOdpowiedzi = findViewById(R.id.odpowiedzi);
+        textViewWynik = findViewById(R.id.textViewWynik);
+        int idRadio[] = new int[]{R.id.radioButtonOdpa, R.id.radioButtonOdpb, R.id.radioButtonOdpc};
         licznik = 0;
+        punkty = 0;
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://my-json-server.typicode.com/wojtekk00/retrofit_pytania/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -66,12 +73,21 @@ public class MainActivity extends AppCompatActivity {
         buttonDalej.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(MainActivity.this, ""+punkty, Toast.LENGTH_SHORT).show();
                 if(licznik<pytania.size()-1){
+                    poprawna = pytania.get(licznik).getPoprawna();
+                    zaznaczona = radioGroupOdpowiedzi.getCheckedRadioButtonId();
+                    if (idRadio[poprawna] == zaznaczona){
+                        punkty++;
+                    }
                     licznik++;
                     wypelnijPytania(licznik);
                 }
                 else{
-
+                    textViewWynik.setText(punkty + "/" + pytania.size());
+                    radioGroupOdpowiedzi.setVisibility(RadioGroup.GONE);
+                    buttonDalej.setVisibility(Button.GONE);
+                    textViewTresc.setVisibility(TextView.GONE);
                 }
             }
         });
